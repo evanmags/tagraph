@@ -8,4 +8,4 @@ Simple graph queries.
 - A single protocol should allow usage, without using base classes
 
 ## Examples
-see [tests](./test_tagraph.py)
+see [tests](./tests/test_tagraph.py)
