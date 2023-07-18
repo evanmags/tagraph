@@ -1,11 +1,11 @@
-from typing import Iterable, Protocol, Generic, TypeVar, Any
 from itertools import chain
+from typing import Generic, Iterable, Protocol, TypeVar
 
-QT = TypeVar("QT", covariant=True)
+QT_co = TypeVar("QT_co", covariant=True)
 
 
-class Queryable(Generic[QT], Protocol):
-    def __iter__(self) -> QT:
+class Queryable(Generic[QT_co], Protocol):
+    def __iter__(self) -> QT_co:
         ...
 
     def __eq__(self, __value: str) -> bool:
@@ -41,16 +41,16 @@ class query(Generic[T]):
 def query_part(part: str) -> "__query_part":
     if "&" in part:
         return query__and(*part.split("&", 1))
-    elif "|" in part:
+    if "|" in part:
         return query__or(*part.split("|", 1))
-    elif part.startswith("!"):
+    if part.startswith("!"):
         return query__not(part[1:])
-    elif part == "*":
+    if part == "*":
         return query__wildcard()
-    elif part == "**":
+    if part == "**":
         return query__multi_level_wildcard()
-    else:
-        return query__name(part)
+    
+    return query__name(part)
 
 
 class __query_part:
@@ -124,10 +124,10 @@ class query__multi_level_wildcard(__query_part):
         return "**"
 
     def get_matches(self, graph: Iterable):
-        _next = [c for c in graph]
+        _next = list(graph)
         _return = []
         for i in _next:
             _return.append(i)
             _next += [_i for _i in i if _i not in _next]
 
-        return list(_return)
+        return _return

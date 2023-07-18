@@ -2,6 +2,7 @@ import pytest
 
 from tests.conftest import TagRepo
 
+
 def test_load_file():
     with open("./tests/tags.yml") as f:
         TagRepo(f)
